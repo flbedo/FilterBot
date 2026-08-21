@@ -83,7 +83,6 @@ class Monitor:
                     logger.exception("Live-цикл получил ошибку; мониторинг не будет завершён")
                 await asyncio.sleep(self.settings.retry_base_seconds)
         finally:
-            self.db.close()
             await self.telegram.disconnect()
 
     async def process_message(self, message: MessageData) -> None:

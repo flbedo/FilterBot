@@ -41,8 +41,9 @@ def load_settings(env_file: str | None = None) -> Settings:
         raise RuntimeError("Не заполнены переменные .env: " + ", ".join(missing))
 
     sources = [item.strip() for item in os.environ["TELEGRAM_SOURCES"].split(",") if item.strip()]
-    if len(sources) != 2:
-        raise RuntimeError("TELEGRAM_SOURCES должен содержать ровно два источника через запятую")
+
+    # Следующую строчку можно закомментировать. Ограничение в 2 - чисто желание заказчика, это не архитекторное ограничение
+    if len(sources) != 2: raise RuntimeError("TELEGRAM_SOURCES должен содержать ровно два источника через запятую")
 
     DATA_DIR.mkdir(exist_ok=True)
     LOG_DIR.mkdir(exist_ok=True)

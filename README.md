@@ -52,10 +52,12 @@ telegram_journalist_monitor/
 
 ## Установка и авторизация
 
-1. Установите Python 3.11+ на Windows.
+1. Установите Python 3.11+ на Windows с https://www.python.org/downloads/. При установке обязательно отметьте галочку **"Add Python to PATH"**
 2. Заполните `.env.example`, а затем переименуйте в `.env`.
 3. Заполните `TELEGRAM_API_ID`, `TELEGRAM_API_HASH`, `TELEGRAM_SOURCES` и `TELEGRAM_TARGET`.
 4. Запустите `run_history.bat` или `run_monitor.bat`.
+   - `run_history.bat` — анализ последних 500 сообщений из истории (для тестирования фильтра)
+   - `run_monitor.bat` — непрерывный мониторинг в реальном времени
 5. При первом запуске Telethon попросит номер телефона, код Telegram и при необходимости пароль 2FA.
 
 Для диагностики можно использовать `python monitor.py live --log-level DEBUG`.
