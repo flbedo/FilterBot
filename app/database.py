@@ -18,21 +18,20 @@ class Database:
         create_database(self.f_name)
 
     def is_processed(self, source_key: str, message_id: int, message_text: str, check_message_text: bool) -> bool:
-        """Проверяет, было ли сообщение уже обработано.
 
-        В live режиме (check_message_text=True) также проверяет на повтор текста сообщения.
-        """
         record_id = f"{source_key}:{message_id}"
 
-        id_exists = is_id_exist(self.f_name, record_id)
+        same_messages_ids = get_ids_by_item(self.f_name, 'message_text', message_text)
 
+        id_exists = record_id in list(same_messages_ids.keys())
+        same_messages_exist = same_messages_ids != {}
+
+        # Если не важен фактический повтор, то просто проверка по идентификатору
         if not check_message_text: return id_exists
 
-        # Логика live режима
+        # Проверяем, что нет технического повтора
         if id_exists: return True
 
-        # Проверяем, есть ли сообщения с таким же текстом
-        same_messages_exist = get_ids_by_item(self.f_name, 'message_text', message_text) != {}
         return same_messages_exist
 
     def mark_processed(self, source_key: str, message_id: int, message_text: str, sent: bool) -> None:
