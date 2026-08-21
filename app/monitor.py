@@ -37,8 +37,11 @@ class Monitor:
                     result = evaluate(message.text, self.filters)
                     if result.is_relevant:
                         relevant += 1
-                    elif self._is_borderline(result) and len(borderline) < 10:
+
+                    elif self._is_borderline(result) and len(borderline) < self.settings.borderline_limit:
+                        # Это пограничные примеры по желанию заказчика. Тут нет никакого скрытого смысла
                         borderline.append((message, result))
+
                     print(format_test_line(message, result), flush=True)
 
             print(f"\nИТОГО: проверено {total}, релевантных {relevant}", flush=True)
@@ -73,7 +76,7 @@ class Monitor:
             await self.telegram.disconnect()
 
     async def process_message(self, message: MessageData) -> None:
-        if self.db.is_processed(message.source_key, message.message_id, message.text):
+        if self.db.is_processed(message.source_key, message.message_id, message.text, self.settings.check_text_repeats):
             logger.debug("Дубль пропущен: %s:%s", message.source_key, message.message_id)
             return
 

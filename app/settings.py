@@ -26,12 +26,14 @@ class Settings:
     history_limit: int
     network_retries: int
     retry_base_seconds: float
+    borderline_limit: int
+    check_text_repeats: bool
     filters_path: Path = FILTERS_PATH
     db_path: Path = DB_PATH
 
 
 def load_settings(env_file: str | None = None) -> Settings:
-    load_dotenv(env_file or BASE_DIR / ".env")
+    load_dotenv(CONFIG_DIR / ".env")
 
     required = ["TELEGRAM_API_ID", "TELEGRAM_API_HASH", "TELEGRAM_SESSION", "TELEGRAM_SOURCES", "TELEGRAM_TARGET"]
     missing = [key for key in required if not os.getenv(key)]
@@ -54,6 +56,8 @@ def load_settings(env_file: str | None = None) -> Settings:
         history_limit=int(os.getenv("HISTORY_LIMIT", "500")),
         network_retries=int(os.getenv("NETWORK_RETRIES", "5")),
         retry_base_seconds=float(os.getenv("NETWORK_RETRY_BASE_SECONDS", "3")),
+        borderline_limit=int(os.getenv("BORDERLINE_LIMIT", "10")),
+        check_text_repeats=bool(int(os.getenv("CHECK_TEXT_REPEATS", "0")))
     )
 
 

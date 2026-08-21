@@ -26,6 +26,7 @@ telegram_journalist_monitor/
   app/
     __init__.py
     cli.py
+    easydata.py
     database.py
     filters.py
     formatter.py
@@ -35,12 +36,12 @@ telegram_journalist_monitor/
     telegram_client.py
   config/
     filters.json
+    .env.example
   data/
   logs/
   tests/
     __init__.py
     test_filters.py
-  .env.example
   .gitignore
   monitor.py
   requirements.txt
@@ -52,16 +53,13 @@ telegram_journalist_monitor/
 ## Установка и авторизация
 
 1. Установите Python 3.11+ на Windows.
-2. Скопируйте `.env.example` в `.env`.
+2. Заполните `.env.example`, а затем переименуйте в `.env`.
 3. Заполните `TELEGRAM_API_ID`, `TELEGRAM_API_HASH`, `TELEGRAM_SOURCES` и `TELEGRAM_TARGET`.
-4. Запустите `run_history.bat` или `python monitor.py history`.
-5. При первом запуске Telethon попросит номер телефона, код Telegram и при необходимости пароль 2FA. Сессию храните только у заказчика.
-6. После успешной проверки истории запустите `run_monitor.bat` или `python monitor.py live`.
+4. Запустите `run_history.bat` или `run_monitor.bat`.
+5. При первом запуске Telethon попросит номер телефона, код Telegram и при необходимости пароль 2FA.
 
 Для диагностики можно использовать `python monitor.py live --log-level DEBUG`.
 
 ## Калибровка фильтра
 
-Редактируйте только `config/filters.json`: `request_keywords`, `exclusions` и `topic_groups`. Основная логика кода при этом не меняется.
-
-Важно: это словарный фильтр первого этапа, без AI-классификации. Поэтому история `history` предназначена именно для калибровки слов и исключений перед включением автоотправки.
+Редактируйте только `config/filters.json`: `request_keywords`, `exclusions` и `topic_groups`. Основная логика кода при этом не меняется. Слова нужно вводить в именительном падеже - в системе предустмотрена лемматизация.
