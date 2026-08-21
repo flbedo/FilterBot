@@ -35,8 +35,11 @@ def format_test_line(message: MessageData, result) -> str:
     preview = " ".join(message.text.split())
     if len(preview) > 180:
         preview = preview[:177] + "..."
+
+    link_info = f" | {message.link}" if message.link and result.is_relevant else ""
+
     return (
-        f"{status} | {message.source_name} | id={message.message_id}\n"
+        f"{status} | {message.source_name} | id={message.message_id}{link_info}\n"
         f"Почему: {result.reason}\n"
         f"Текст: {preview}\n"
     )

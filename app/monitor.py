@@ -27,6 +27,7 @@ class Monitor:
         await self.telegram.connect()
         total = relevant = 0
         borderline: list[tuple[MessageData, object]] = []
+        relevant_messages: list[tuple[MessageData, object]] = []
 
         try:
             for source in self.settings.sources:
@@ -37,20 +38,30 @@ class Monitor:
                     result = evaluate(message.text, self.filters)
                     if result.is_relevant:
                         relevant += 1
+                        relevant_messages.append((message, result))
 
                     elif self._is_borderline(result) and len(borderline) < self.settings.borderline_limit:
                         # Это пограничные примеры по желанию заказчика. Тут нет никакого скрытого смысла
                         borderline.append((message, result))
 
+            # Сначала выводим только релевантные сообщения
+            print(f"\n=== РЕЛЕВАНТНЫЕ СООБЩЕНИЯ ({len(relevant_messages)}) ===", flush=True)
+            if relevant_messages:
+                for message, result in relevant_messages:
                     print(format_test_line(message, result), flush=True)
+            else:
+                print("Релевантных сообщений не найдено в выбранной истории.", flush=True)
 
-            print(f"\nИТОГО: проверено {total}, релевантных {relevant}", flush=True)
-            print("\nПограничные примеры:", flush=True)
+            # Затем пограничные примеры
+            print(f"\n=== ПОГРАНИЧНЫЕ ПРИМЕРЫ ({len(borderline)}) ===", flush=True)
             if borderline:
                 for message, result in borderline:
                     print(format_test_line(message, result), flush=True)
             else:
                 print("Пограничных примеров не найдено в выбранной истории.", flush=True)
+
+            # Итоговая статистика
+            print(f"\nИТОГО: проверено {total}, релевантных {relevant}", flush=True)
         finally:
             await self.close()
 
