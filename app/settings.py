@@ -43,7 +43,7 @@ def load_settings(env_file: str | None = None) -> Settings:
     sources = [item.strip() for item in os.environ["TELEGRAM_SOURCES"].split(",") if item.strip()]
 
     # Следующую строчку можно закомментировать. Ограничение в 2 - чисто желание заказчика, это не архитекторное ограничение
-    if len(sources) != 2: raise RuntimeError("TELEGRAM_SOURCES должен содержать ровно два источника через запятую")
+    # if len(sources) != 2: raise RuntimeError("TELEGRAM_SOURCES должен содержать ровно два источника через запятую")
 
     DATA_DIR.mkdir(exist_ok=True)
     LOG_DIR.mkdir(exist_ok=True)
